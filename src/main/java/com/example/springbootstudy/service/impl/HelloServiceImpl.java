@@ -15,7 +15,7 @@ public class HelloServiceImpl implements HelloService {
     public String sayHello() {
 
         System.out.println(testStr);
-        return "hello !!";
+        return testStr;
     }
 
     public String getTestStr() {

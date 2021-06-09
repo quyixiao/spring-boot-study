@@ -13,7 +13,7 @@ public class TestController {
 
     @RequestMapping("/home")
     public String home(){
-        helloService.sayHello();
-        return "hello world";
+        return helloService.sayHello();
+
     }
 }
