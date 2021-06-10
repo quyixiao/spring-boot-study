@@ -3,7 +3,10 @@ package com.example.springbootstudy.controller;
 import com.alibaba.fastjson.JSON;
 import com.example.springbootstudy.entity.TestUser;
 import com.example.springbootstudy.mapper.TestUserMapper;
+import com.example.springbootstudy.service.ConditionalOnBeanUser;
 import com.example.springbootstudy.service.HelloService;
+import com.example.springbootstudy.service.ServiceTest;
+import com.example.springbootstudy.service.ServiceTestImpl;
 import com.example.springbootstudy.utils.SpringContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +30,12 @@ public class TestController {
     private TestUserMapper testUserMapper;
 
 
+/*    @Autowired
+    private ConditionalOnClassUser conditionalOnClassUser;*/
+
     @RequestMapping("/home")
     public String home() {
+        //    conditionalOnClassUser.a();
         //System.out.println("profile1 " + profile1 + ",profile " + profile);
         System.out.println("profile = " + profile);
         return helloService.sayHello();
@@ -50,9 +57,57 @@ public class TestController {
     }
 
     @RequestMapping("select")
-    public String select(){
+    public String select() {
         TestUser testUser = testUserMapper.selectTestUserById(14l);
         System.out.println(JSON.toJSONString(testUser));
         return "SUCESS";
     }
+
+    @RequestMapping("conditionalOnClassTest")
+    public String conditionalOnClassTest() {
+        Object object = SpringContextUtils.getBean("conditionalOnClassUser");
+        System.out.println(object);
+        return "Sucess";
+    }
+
+    @RequestMapping("conditionalOnMissingClassUserTest")
+    public String conditionalOnMissingClassUserTest() {
+        Object object = SpringContextUtils.getBean("conditionalOnMissingClassUser");
+        System.out.println(object);
+        return "Sucess";
+    }
+
+
+    @RequestMapping("conditionalOnMissingClassOnClassUserTest")
+    public String conditionalOnMissingClassOnClassUserTest() {
+        Object object = SpringContextUtils.getBean("conditionalOnMissingClassOnClassUser");
+        System.out.println(object);
+        System.out.println();
+        return "Sucess";
+    }
+
+
+    @Autowired
+    private ServiceTestImpl serviceTestImpl;
+
+    @Autowired
+    private ServiceTest serviceTest;
+
+
+    @RequestMapping("serviceTestImplTest")
+    public String serviceTestImplTest() {
+        System.out.println(serviceTestImpl);
+        return "Sucess";
+    }
+
+    @Autowired
+    private ConditionalOnBeanUser conditionalOnBeanUser;
+
+    @RequestMapping("conditionalOnBeanUserTest")
+    public String conditionalOnBeanUserTest() {
+        System.out.println(conditionalOnBeanUser);
+        return "Sucess";
+    }
+
+
 }
