@@ -14,7 +14,5 @@ public class TestStopWatch {
 
         double time = stopWatch.getTotalTimeSeconds();
         System.out.println(time);
-
-
     }
 }
