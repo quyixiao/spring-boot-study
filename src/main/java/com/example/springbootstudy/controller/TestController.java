@@ -3,17 +3,17 @@ package com.example.springbootstudy.controller;
 import com.alibaba.fastjson.JSON;
 import com.example.springbootstudy.entity.TestUser;
 import com.example.springbootstudy.mapper.TestUserMapper;
-import com.example.springbootstudy.service.ConditionalOnBeanUser;
-import com.example.springbootstudy.service.HelloService;
-import com.example.springbootstudy.service.ServiceTest;
-import com.example.springbootstudy.service.ServiceTestImpl;
+import com.example.springbootstudy.service.*;
 import com.example.springbootstudy.utils.SpringContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 @RestController
 public class TestController {
@@ -103,11 +103,55 @@ public class TestController {
     @Autowired
     private ConditionalOnBeanUser conditionalOnBeanUser;
 
+
+
     @RequestMapping("conditionalOnBeanUserTest")
     public String conditionalOnBeanUserTest() {
         System.out.println(conditionalOnBeanUser);
+     //   ConditionalOnBeanAnnocation1 conditionalOnBeanAnnocation1 = SpringContextUtils.getBean(ConditionalOnBeanAnnocation1.class);
+//        System.out.println(conditionalOnBeanAnnocation1);
         return "Sucess";
     }
 
+
+    @Autowired
+    private ConditionalOnSingleCandidateUser conditionalOnSingleCandidateUser;
+
+
+    @Autowired
+    private IConditionalOnSingleCandidateUserAnnocation iConditionalOnSingleCandidateUserAnnocation;
+
+
+
+
+    @RequestMapping("conditionalOnSingleCandidateUserTest")
+    public String conditionalOnSingleCandidateUserTest() {
+        System.out.println(conditionalOnSingleCandidateUser);
+        ConditionalOnSingleCandidateUserAnnocation0 bean1 = SpringContextUtils.getBean(ConditionalOnSingleCandidateUserAnnocation0.class);
+        ConditionalOnSingleCandidateUserAnnocation0 bean2 = SpringContextUtils.getBean(ConditionalOnSingleCandidateUserAnnocation0.class);
+        System.out.println(bean2 == bean1);
+        return "Sucess";
+    }
+
+    @Autowired
+    private ConditionalOnMissingBeanUser conditionalOnMissingBeanUser;
+
+
+    @RequestMapping("conditionalOnMissingBeanUserTest")
+    public String conditionalOnMissingBeanUserTest() {
+        System.out.println(conditionalOnMissingBeanUser);
+        return "Sucess";
+    }
+
+
+    @Autowired
+    private EnableConfigurationPropertiesTest enableConfigurationPropertiesTest;
+
+
+    @RequestMapping("enableConfigurationPropertiesTest")
+    public String enableConfigurationPropertiesTest() {
+        System.out.println(JSON.toJSONString(enableConfigurationPropertiesTest));
+        return "Sucess";
+    }
 
 }

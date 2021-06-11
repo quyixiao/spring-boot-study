@@ -9,3 +9,14 @@ server:
 spring:
   profiles:
     active: dev
+
+
+#xxx:
+#  test:
+#    username: quyixiao
+#    password: 123456
+
+XXX_TEST:
+  username: quyixiao
+  password: 123456
+  homeLocation: 湖南省
