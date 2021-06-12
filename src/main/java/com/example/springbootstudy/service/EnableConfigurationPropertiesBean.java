@@ -7,5 +7,7 @@ import org.springframework.stereotype.Service;
 @EnableConfigurationProperties(EnableConfigurationPropertiesTest.class)
 public class EnableConfigurationPropertiesBean {
 
-
+    public EnableConfigurationPropertiesBean() {
+        System.out.println("EnableConfigurationPropertiesBean实例化");
+    }
 }

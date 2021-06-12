@@ -8,4 +8,7 @@ import org.springframework.stereotype.Service;
 //@Primary
 public class ConditionalOnSingleCandidateUserAnnocation1 implements IConditionalOnSingleCandidateUserAnnocation {
 
+    public ConditionalOnSingleCandidateUserAnnocation1() {
+        System.out.println("ConditionalOnSingleCandidateUserAnnocation1实例化");
+    }
 }

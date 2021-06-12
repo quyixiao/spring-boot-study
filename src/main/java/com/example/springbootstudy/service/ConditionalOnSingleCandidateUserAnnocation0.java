@@ -10,4 +10,7 @@ import org.springframework.stereotype.Service;
 @Scope("prototype")
 public class ConditionalOnSingleCandidateUserAnnocation0 {
 
+    public ConditionalOnSingleCandidateUserAnnocation0() {
+        System.out.println("ConditionalOnSingleCandidateUserAnnocation0实例化");
+    }
 }

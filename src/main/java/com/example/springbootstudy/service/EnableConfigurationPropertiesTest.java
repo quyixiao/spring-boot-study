@@ -8,6 +8,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class EnableConfigurationPropertiesTest {
 
 
+    public EnableConfigurationPropertiesTest() {
+        System.out.println("EnableConfigurationPropertiesTest实例化");
+    }
+
+    public EnableConfigurationPropertiesTest(String userName, String password, String homeLocation) {
+        this.userName = userName;
+        this.password = password;
+        this.homeLocation = homeLocation;
+    }
+
     private String userName;
     private String password;
     private String homeLocation;

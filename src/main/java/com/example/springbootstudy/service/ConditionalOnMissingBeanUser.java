@@ -9,4 +9,7 @@ import org.springframework.stereotype.Service;
         ignored = ConditionalOnMissingBeanAnnocation.class)
 public class ConditionalOnMissingBeanUser {
 
+    public ConditionalOnMissingBeanUser() {
+        System.out.println("ConditionalOnMissingBeanUser实例化");
+    }
 }
