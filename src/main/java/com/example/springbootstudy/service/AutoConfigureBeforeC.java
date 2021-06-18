@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 public class AutoConfigureBeforeC {
 
     public AutoConfigureBeforeC() {
-        System.out.println("BeforeC实例化");
+        System.out.println("AutoConfigureBeforeC实例化");
     }
 
 }

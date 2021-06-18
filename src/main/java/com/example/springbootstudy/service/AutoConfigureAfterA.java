@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public class AutoConfigureAfterA {
 
     public AutoConfigureAfterA() {
-        System.out.println("A实例化");
+        System.out.println("AutoConfigureAfterA实例化");
     }
 }

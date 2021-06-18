@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public class AutoConfigureAfterC {
 
     public AutoConfigureAfterC() {
-        System.out.println("C实例化");
+        System.out.println("AutoConfigureAfterC实例化");
     }
 }

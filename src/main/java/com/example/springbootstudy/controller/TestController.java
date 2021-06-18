@@ -26,6 +26,11 @@ public class TestController {
     @Value("${test.profile}")
     private String profile;
 
+
+   // @Value("${bean.message}")
+    private String beanMessage;
+
+
     @Autowired
     private TestUserMapper testUserMapper;
 
@@ -35,6 +40,7 @@ public class TestController {
 
     @RequestMapping("/home")
     public String home() {
+        System.out.println(beanMessage);
         //    conditionalOnClassUser.a();
         //System.out.println("profile1 " + profile1 + ",profile " + profile);
         System.out.println("profile = " + profile);
@@ -151,6 +157,36 @@ public class TestController {
     @RequestMapping("enableConfigurationPropertiesTest")
     public String enableConfigurationPropertiesTest() {
         System.out.println(JSON.toJSONString(enableConfigurationPropertiesTest));
+        return "Sucess";
+    }
+
+
+    @RequestMapping("importResourceTestBeanTest")
+    public String importResourceTestBeanTest() {
+        ImportResourceTestBean importResourceTestBean = SpringContextUtils.getBean(ImportResourceTestBean.class);
+        System.out.println(importResourceTestBean);
+        return "Sucess";
+    }
+
+    @RequestMapping("processInterfaceCTest")
+    public String processInterfaceCTest() {
+        ProcessInterfaceB processInterfaceB = SpringContextUtils.getBean(ProcessInterfaceB.class);
+        ProcessInterfaceC processInterfaceC = SpringContextUtils.getBean(ProcessInterfaceC.class);
+        System.out.println(processInterfaceB);
+        System.out.println(processInterfaceC);
+        return "Sucess";
+    }
+
+    @RequestMapping("superClassConfigTest")
+    public String superClassConfigTest() {
+        SuperClassConfigA superClassConfigA = SpringContextUtils.getBean(SuperClassConfigA.class);
+        System.out.println(superClassConfigA);
+        return "Sucess";
+    }
+    @RequestMapping("importATest")
+    public String importATest() {
+        ImportA importA = SpringContextUtils.getBean(ImportA.class);
+        System.out.println(importA);
         return "Sucess";
     }
 

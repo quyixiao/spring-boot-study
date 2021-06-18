@@ -1,5 +1,11 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.example.springbootstudy.service.AutoConfigureAfterA,\
+  com.example.springbootstudy.service.AutoConfigureAfterC,\
 com.example.springbootstudy.service.AutoConfigureAfterB,\
   com.example.springbootstudy.service.AutoConfigureBeforeB,\
   com.example.springbootstudy.service.AutoConfigureBeforeA,\
-com.example.springbootstudy.service.AutoConfigureBeforeC
+com.example.springbootstudy.service.AutoConfigureBeforeC,\
+com.example.springbootstudy.service.ImportByA,\
+  com.example.springbootstudy.service.AutoConfigureCycleA,\
+  com.example.springbootstudy.service.AutoConfigureCycleB,\
+  com.example.springbootstudy.service.AutoConfigureCycleC
