@@ -164,7 +164,7 @@ public class LzSizeAndTimeBasedFNATP<E> extends TimeBasedFileNamingAndTriggering
 
 
     public static String getNewFileName(String elapsedPeriodsFileName) {
-        SimpleDateFormat df = new SimpleDateFormat("HH.mm.ss.SSS");
+        SimpleDateFormat df = new SimpleDateFormat("dd.HH.mm.ss.SSS");
         String elapsedPeriodStemAfter = FileFilterUtil.afterLastSlash(elapsedPeriodsFileName);
         String elapsedPeriodStemBefore = beforeLastSlash(elapsedPeriodsFileName);
         String bs[] = elapsedPeriodStemAfter.split("\\.");
@@ -177,10 +177,6 @@ public class LzSizeAndTimeBasedFNATP<E> extends TimeBasedFileNamingAndTriggering
         return sb.toString();
     }
 
-
-    public static void main(String[] args) {
-        System.out.println(getNewFileName("/home/admin/logs/eb_api/logs/api-all.2021-06-19.0.log"));
-    }
 
     public static String beforeLastSlash(String sregex) {
         int i = sregex.lastIndexOf('/');
