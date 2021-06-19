@@ -2,3 +2,7 @@
 
 test1:
   profile: xxx
+
+
+logging:
+  config: classpath:logback-${spring.profiles.active}.xml

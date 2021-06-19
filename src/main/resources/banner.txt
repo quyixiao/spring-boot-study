@@ -1,7 +1,7 @@
 Application Version: ${market.version}
 Spring Boot Version: ${spring-boot.version}
 
-${AnsiColor.CYAN}
+
 
                           _ooOoo_
                          o8888888o

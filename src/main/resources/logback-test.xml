@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <conversionRule conversionWord="sampleClass"  converterClass="ch.qos.logback.core.rolling.SampleClassConverter" />
+    <conversionRule conversionWord="sampleLine"  converterClass="ch.qos.logback.core.rolling.SampleLineConverter" />
+
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml"/>-->
+    <!-- 定义log文件的目录 -->
+    <property name="LOG_HOME" value="${user.home}/logs/eb_api"></property>
+    <!-- 加载 Spring 配置文件信息 -->
+    <springProperty scope="context" name="applicationName" source="spring.application.name" defaultValue="localhost"/>
+    <!-- 日志输出格式 -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS}   [${applicationName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-}]   [%thread]%-5level    %sampleClass:%sampleLine   %msg%n"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+    </appender>
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/api-info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/logs/api-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--单文件日志最大的大小-->
+            <maxFileSize>500MB</maxFileSize>
+            <!--文件保存6个月-->
+            <!-- <maxHistory>180</maxHistory>-->>
+            <!--总文件日志最大的大小-->
+            <!--<totalSizeCap>100GB</totalSizeCap> -->
+        </rollingPolicy>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/api-warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/logs/api-warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>500MB</maxFileSize>
+            <!-- <maxHistory>180</maxHistory>-->>
+            <!--<totalSizeCap>100GB</totalSizeCap>-->
+        </rollingPolicy>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/api-error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/logs/api-error.%d{yyyy-MM-dd }.%i.log</fileNamePattern>
+            <!--单文件日志最大的大小-->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+
+    <appender name="ALL_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/api-all.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/logs/api-all.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--单文件日志最大的大小-->
+            <maxFileSize>800MB</maxFileSize>
+            <!--文件保存6个月-->
+            <maxHistory>180</maxHistory>
+            <!--总文件日志最大的大小-->
+            <totalSizeCap>60GB</totalSizeCap>
+        </rollingPolicy>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+
+
+    <appender name="THIRD_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/api-third.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/logs/api-third.%d{yyyy-MM-dd }.%i.log</fileNamePattern>
+            <!--单文件日志最大的大小-->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="LT_USERPOOL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/api-userpool.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/logs/api-userpool.%d{yyyy-MM-dd }.%i.log</fileNamePattern>
+            <!--单文件日志最大的大小-->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="MaiDian" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/api-maidian.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/logs/api-maidian.%d{yyyy-MM-dd }.%i.log</fileNamePattern>
+            <!--单文件日志最大的大小-->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+
+    <appender name="SQL_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${SQL_LOG_HOME}/sql.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${SQL_LOG_HOME}/logs/sql.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--单文件日志最大的大小-->
+            <maxFileSize>2GB</maxFileSize>
+            <!--文件保存6个月-->
+            <maxHistory>30</maxHistory>
+            <!--总文件日志最大的大小-->
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+
+    <logger name="THIRD_FILE" level="Info">
+        <appender-ref ref="THIRD_FILE"/>
+    </logger>
+    <logger name="LT_USERPOOL" level="Info">
+        <appender-ref ref="LT_USERPOOL"/>
+    </logger>
+    <logger name="MaiDian" level="Info">
+        <appender-ref ref="MaiDian"/>
+    </logger>
+
+    <logger name="SQL_LOG" level="Info" additivity="false">
+        <appender-ref ref="SQL_FILE" />
+    </logger>
+
+
+    <root level="INFO">
+        <appender-ref ref="INFO_FILE"/>
+        <appender-ref ref="WARN_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+        <appender-ref ref="ALL_FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
