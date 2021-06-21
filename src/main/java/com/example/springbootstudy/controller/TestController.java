@@ -5,6 +5,7 @@ import com.example.springbootstudy.entity.TestUser;
 import com.example.springbootstudy.mapper.TestUserMapper;
 import com.example.springbootstudy.service.*;
 import com.example.springbootstudy.utils.SpringContextUtils;
+import org.springframework.aop.scope.ScopedObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -189,5 +190,28 @@ public class TestController {
         System.out.println(importA);
         return "Sucess";
     }
+
+
+    @RequestMapping("scopedProxyModeTest")
+    public String scopedProxyModeTest() {
+        ScopedProxyModeA importA = SpringContextUtils.getBean(ScopedProxyModeA.class);
+        importA.aaaaaa();
+        return "Sucess";
+    }
+/*
+
+
+    @Autowired
+    private ScopedObject scopedObject;
+
+    @RequestMapping("scopedProxyModeBTest")
+    public String scopedProxyModeBTest() {
+
+        Object iScopedProxyModexxx = scopedObject.getTargetObject();
+        System.out.println(iScopedProxyModexxx);
+        return "Sucess";
+    }*/
+
+
 
 }
