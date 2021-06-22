@@ -1,7 +1,7 @@
 package com.example.springbootstudy.service;
 
 
-public class ScopedProxyModeA implements IScopedProxyModeA{
+public class ScopedProxyModeA {
 
 
     public void aaaaaa(){

@@ -4,17 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.example.springbootstudy.entity.TestUser;
 import com.example.springbootstudy.mapper.TestUserMapper;
 import com.example.springbootstudy.service.*;
+import com.example.springbootstudy.service.impl.Auto;
+import com.example.springbootstudy.service.impl.Intelligent;
 import com.example.springbootstudy.utils.SpringContextUtils;
 import org.springframework.aop.scope.ScopedObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
 
 @RestController
 public class TestController {
@@ -191,27 +190,64 @@ public class TestController {
         return "Sucess";
     }
 
-
-    @RequestMapping("scopedProxyModeTest")
-    public String scopedProxyModeTest() {
-        ScopedProxyModeA importA = SpringContextUtils.getBean(ScopedProxyModeA.class);
-        importA.aaaaaa();
-        return "Sucess";
-    }
 /*
+
+    @Autowired
+    private ScopedProxyModeA scopedProxyModeA;
 
 
     @Autowired
-    private ScopedObject scopedObject;
+    private IScopedProxyModeA iScopedProxyModeA;
+*/
+
+    @RequestMapping("scopedProxyModeTest")
+    public String scopedProxyModeTest() {
+        ScopedProxyModeA importA = (ScopedProxyModeA)SpringContextUtils.getBean("scopedTarget.scopedProxyModeA");
+        System.out.println(importA);
+        Object object = SpringContextUtils.getBean("scopedProxyModeA");
+        System.out.println( object);
+
+/*
+
+        System.out.println(iScopedProxyModeA);
+
+
+*/
+
+
+
+        importA.aaaaaa();
+        return "Sucess";
+    }
+
+
+
+
 
     @RequestMapping("scopedProxyModeBTest")
     public String scopedProxyModeBTest() {
-
-        Object iScopedProxyModexxx = scopedObject.getTargetObject();
+        ScopedObject importA = (ScopedObject)SpringContextUtils.getBean("scopedObject");
+        Object iScopedProxyModexxx = importA.getTargetObject();
         System.out.println(iScopedProxyModexxx);
         return "Sucess";
-    }*/
+    }
 
+
+
+
+
+
+    @RequestMapping("myCarTest")
+    public String myCarTest() {
+        Auto car = (Auto) SpringContextUtils.getBean("myCar");
+
+
+        car.driving();
+        Intelligent intelligentCar = (Intelligent)car;
+        intelligentCar.selfDriving();
+
+        return "Sucess";
+    }
 
 
 }
