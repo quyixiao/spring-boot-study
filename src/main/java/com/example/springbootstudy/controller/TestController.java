@@ -64,7 +64,9 @@ public class TestController {
 
     @RequestMapping("select")
     public String select() {
+        helloService.sayHello();
         TestUser testUser = testUserMapper.selectTestUserById(14l);
+
         System.out.println(JSON.toJSONString(testUser));
         return "SUCESS";
     }

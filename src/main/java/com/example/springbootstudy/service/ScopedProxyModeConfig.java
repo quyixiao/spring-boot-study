@@ -14,15 +14,22 @@ import org.springframework.web.context.WebApplicationContext;
 @Configuration
 public class ScopedProxyModeConfig {
 
-/*
+
+    public ScopedProxyModeConfig(){
+        System.out.println("ScopedProxyModeConfig 实例化");
+    }
+
+
 
     @Bean
-    @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+    //@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
     public ScopedProxyModeA scopedProxyModeA() {
+        System.out.println("ScopedProxyModeA 实例化");
         return new ScopedProxyModeA();
     }
 
 
+    /*
     @Bean
     @Scope(proxyMode = ScopedProxyMode.INTERFACES)
     public IScopedProxyModeA scopedProxyModeAAA() {

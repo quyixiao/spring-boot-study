@@ -8,4 +8,6 @@ com.example.springbootstudy.service.AutoConfigureBeforeC,\
 com.example.springbootstudy.service.ImportByA,\
   com.example.springbootstudy.service.AutoConfigureCycleA,\
   com.example.springbootstudy.service.AutoConfigureCycleB,\
-  com.example.springbootstudy.service.AutoConfigureCycleC
+  com.example.springbootstudy.service.AutoConfigureCycleC,\
+   com.example.springbootstudy.service.impl.ConfigurationTestA,\
+   com.example.springbootstudy.service.impl.ConfigurationTestA.ConfigurationTestB
