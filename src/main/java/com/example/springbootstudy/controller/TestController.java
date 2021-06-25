@@ -7,15 +7,19 @@ import com.example.springbootstudy.service.*;
 import com.example.springbootstudy.service.impl.Auto;
 import com.example.springbootstudy.service.impl.Intelligent;
 import com.example.springbootstudy.utils.SpringContextUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.aop.scope.ScopedObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 public class TestController {
 
     @Autowired
@@ -33,6 +37,9 @@ public class TestController {
 
     @Autowired
     private TestUserMapper testUserMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
 /*    @Autowired
@@ -248,6 +255,43 @@ public class TestController {
         Intelligent intelligentCar = (Intelligent)car;
         intelligentCar.selfDriving();
 
+        return "Sucess";
+    }
+
+
+
+
+
+    @RequestMapping("redistTest")
+    public String redistTest() {
+
+        return "Sucess";
+    }
+
+
+
+    @Value("${eb.config.rabbitQueue.aaaa}")
+    public String routingKey1;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @RequestMapping("rabbitTest")
+    public String rabbitTest() {
+        String message = "测试" + System.currentTimeMillis();
+        rabbitTemplate.convertAndSend(routingKey1,message);
+        System.out.println("发送消息为：" + message );
+        return "Sucess";
+    }
+
+
+    @RequestMapping("rabbitTest2")
+    public String rabbitTest2() {
+        for(int i = 0 ;i < 100;i ++){
+            String message = "测试 " + i + " " + System.currentTimeMillis();
+            rabbitTemplate.convertAndSend(routingKey1,message);
+            log.info(" 发送消息为：" + message );
+        }
         return "Sucess";
     }
 

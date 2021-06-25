@@ -13,6 +13,17 @@ server:
 
 
 spring:
+  rabbitmq:
+    host: 172.16.157.242
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 5
+
+
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
@@ -48,3 +59,9 @@ spring:
             multi-statement-allow: true
 
 
+
+
+eb:
+  config:
+    rabbitQueue:
+      aaaa: test1
