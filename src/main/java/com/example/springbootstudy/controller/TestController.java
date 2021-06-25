@@ -1,13 +1,17 @@
 package com.example.springbootstudy.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.example.springbootstudy.config.AmqpConfig;
+import com.example.springbootstudy.entity.Order;
 import com.example.springbootstudy.entity.TestUser;
 import com.example.springbootstudy.mapper.TestUserMapper;
+import com.example.springbootstudy.sender.DelaySender;
 import com.example.springbootstudy.service.*;
 import com.example.springbootstudy.service.impl.Auto;
 import com.example.springbootstudy.service.impl.Intelligent;
 import com.example.springbootstudy.utils.SpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.aop.scope.ScopedObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +19,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -31,7 +43,7 @@ public class TestController {
     private String profile;
 
 
-   // @Value("${bean.message}")
+    // @Value("${bean.message}")
     private String beanMessage;
 
 
@@ -119,11 +131,10 @@ public class TestController {
     private ConditionalOnBeanUser conditionalOnBeanUser;
 
 
-
     @RequestMapping("conditionalOnBeanUserTest")
     public String conditionalOnBeanUserTest() {
         System.out.println(conditionalOnBeanUser);
-     //   ConditionalOnBeanAnnocation1 conditionalOnBeanAnnocation1 = SpringContextUtils.getBean(ConditionalOnBeanAnnocation1.class);
+        //   ConditionalOnBeanAnnocation1 conditionalOnBeanAnnocation1 = SpringContextUtils.getBean(ConditionalOnBeanAnnocation1.class);
 //        System.out.println(conditionalOnBeanAnnocation1);
         return "Sucess";
     }
@@ -135,8 +146,6 @@ public class TestController {
 
     @Autowired
     private IConditionalOnSingleCandidateUserAnnocation iConditionalOnSingleCandidateUserAnnocation;
-
-
 
 
     @RequestMapping("conditionalOnSingleCandidateUserTest")
@@ -192,6 +201,7 @@ public class TestController {
         System.out.println(superClassConfigA);
         return "Sucess";
     }
+
     @RequestMapping("importATest")
     public String importATest() {
         ImportA importA = SpringContextUtils.getBean(ImportA.class);
@@ -211,10 +221,10 @@ public class TestController {
 
     @RequestMapping("scopedProxyModeTest")
     public String scopedProxyModeTest() {
-        ScopedProxyModeA importA = (ScopedProxyModeA)SpringContextUtils.getBean("scopedTarget.scopedProxyModeA");
+        ScopedProxyModeA importA = (ScopedProxyModeA) SpringContextUtils.getBean("scopedTarget.scopedProxyModeA");
         System.out.println(importA);
         Object object = SpringContextUtils.getBean("scopedProxyModeA");
-        System.out.println( object);
+        System.out.println(object);
 
 /*
 
@@ -224,26 +234,18 @@ public class TestController {
 */
 
 
-
         importA.aaaaaa();
         return "Sucess";
     }
 
 
-
-
-
     @RequestMapping("scopedProxyModeBTest")
     public String scopedProxyModeBTest() {
-        ScopedObject importA = (ScopedObject)SpringContextUtils.getBean("scopedObject");
+        ScopedObject importA = (ScopedObject) SpringContextUtils.getBean("scopedObject");
         Object iScopedProxyModexxx = importA.getTargetObject();
         System.out.println(iScopedProxyModexxx);
         return "Sucess";
     }
-
-
-
-
 
 
     @RequestMapping("myCarTest")
@@ -252,14 +254,11 @@ public class TestController {
 
 
         car.driving();
-        Intelligent intelligentCar = (Intelligent)car;
+        Intelligent intelligentCar = (Intelligent) car;
         intelligentCar.selfDriving();
 
         return "Sucess";
     }
-
-
-
 
 
     @RequestMapping("redistTest")
@@ -267,7 +266,6 @@ public class TestController {
 
         return "Sucess";
     }
-
 
 
     @Value("${eb.config.rabbitQueue.aaaa}")
@@ -279,21 +277,61 @@ public class TestController {
     @RequestMapping("rabbitTest")
     public String rabbitTest() {
         String message = "测试" + System.currentTimeMillis();
-        rabbitTemplate.convertAndSend(routingKey1,message);
-        System.out.println("发送消息为：" + message );
+        rabbitTemplate.convertAndSend(routingKey1, message);
+        System.out.println("发送消息为：" + message);
         return "Sucess";
     }
 
 
     @RequestMapping("rabbitTest2")
     public String rabbitTest2() {
-        for(int i = 0 ;i < 100;i ++){
+        for (int i = 0; i < 100; i++) {
             String message = "测试 " + i + " " + System.currentTimeMillis();
-            rabbitTemplate.convertAndSend(routingKey1,message);
-            log.info(" 发送消息为：" + message );
+            rabbitTemplate.convertAndSend(routingKey1, message);
+            log.info(" 发送消息为：" + message);
         }
         return "Sucess";
     }
 
+    @Autowired
+    private DelaySender delaySender;
+
+    @GetMapping("/sendDelay")
+    public Object sendDelay() {
+        Order order1 = new Order();
+        order1.setOrderStatus(0);
+        order1.setOrderId("123456");
+        order1.setOrderName("小米6");
+
+        Order order2 = new Order();
+        order2.setOrderStatus(1);
+        order2.setOrderId("456789");
+        order2.setOrderName("小米8");
+
+        delaySender.sendDelay(order1);
+        delaySender.sendDelay(order2);
+        return "ok";
+    }
+
+    @Autowired
+    AmqpTemplate rabbitTemplate1;
+    @Autowired
+    AmqpConfig amqpConfig;
+
+    @GetMapping("/hello")
+    public void hello() {
+        String context = "hello " + new Date();
+        System.out.println("HelloPublisher : " + context);
+        amqpConfig.bindingExchange(
+                amqpConfig.helloQueue(),
+                amqpConfig.crmExchange(),
+                "crm.hello.#"
+        );
+        this.rabbitTemplate1.convertAndSend(AmqpConfig.EXCHANGE, AmqpConfig.HELLO, context);
+    }
+
 
 }
+
+
+
