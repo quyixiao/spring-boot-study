@@ -9,17 +9,15 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
 @Slf4j
-public class RabbitBussListener {
-
+@RabbitListener(queues = "#{rabbitTestQueuebbbb.name}",containerFactory = "simpleRabbitListenerContainerFactory")
+public class RabbitBussListenercccc {
 
     @RabbitHandler
-    @RabbitListener(queues = "#{rabbitTestQueue.name}",containerFactory = "simpleRabbitListenerContainerFactory")
     public void consumeMessage(@Payload String message, @Header(AmqpHeaders.DELIVERY_TAG) long delivertTag, Channel channel) {
         try {
             System.out.println("-------接收到消息：" + message);

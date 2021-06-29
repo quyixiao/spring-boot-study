@@ -1,11 +1,8 @@
 package com.example.springbootstudy.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.example.springbootstudy.config.AmqpConfig;
-import com.example.springbootstudy.entity.Order;
 import com.example.springbootstudy.entity.TestUser;
 import com.example.springbootstudy.mapper.TestUserMapper;
-import com.example.springbootstudy.sender.DelaySender;
 import com.example.springbootstudy.service.*;
 import com.example.springbootstudy.service.impl.Auto;
 import com.example.springbootstudy.service.impl.Intelligent;
@@ -23,12 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -271,12 +263,18 @@ public class TestController {
     @Value("${eb.config.rabbitQueue.aaaa}")
     public String routingKey1;
 
+
+
+    @Value("${eb.config.rabbitQueue.bbbb}")
+    public String routingKey2;
+
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
     @RequestMapping("rabbitTest")
     public String rabbitTest() {
-        String message = "测试" + System.currentTimeMillis();
+        String message = "测试 " + System.currentTimeMillis();
         rabbitTemplate.convertAndSend(routingKey1, message);
         System.out.println("发送消息为：" + message);
         return "Sucess";
@@ -284,7 +282,7 @@ public class TestController {
 
 
     @RequestMapping("rabbitTest2")
-    public String rabbitTest2() {
+    public String rabbitTest2internalRabbitListenerAnnotationProcessor() {
         for (int i = 0; i < 100; i++) {
             String message = "测试 " + i + " " + System.currentTimeMillis();
             rabbitTemplate.convertAndSend(routingKey1, message);
@@ -293,41 +291,12 @@ public class TestController {
         return "Sucess";
     }
 
-    @Autowired
-    private DelaySender delaySender;
-
-    @GetMapping("/sendDelay")
-    public Object sendDelay() {
-        Order order1 = new Order();
-        order1.setOrderStatus(0);
-        order1.setOrderId("123456");
-        order1.setOrderName("小米6");
-
-        Order order2 = new Order();
-        order2.setOrderStatus(1);
-        order2.setOrderId("456789");
-        order2.setOrderName("小米8");
-
-        delaySender.sendDelay(order1);
-        delaySender.sendDelay(order2);
-        return "ok";
-    }
-
-    @Autowired
-    AmqpTemplate rabbitTemplate1;
-    @Autowired
-    AmqpConfig amqpConfig;
-
-    @GetMapping("/hello")
-    public void hello() {
-        String context = "hello " + new Date();
-        System.out.println("HelloPublisher : " + context);
-        amqpConfig.bindingExchange(
-                amqpConfig.helloQueue(),
-                amqpConfig.crmExchange(),
-                "crm.hello.#"
-        );
-        this.rabbitTemplate1.convertAndSend(AmqpConfig.EXCHANGE, AmqpConfig.HELLO, context);
+    @RequestMapping("rabbitTestbbbb")
+    public String rabbitTestbbbb() {
+        String message = "测试 " + System.currentTimeMillis();
+        rabbitTemplate.convertAndSend(routingKey2, message);
+        System.out.println("发送消息为：" + message);
+        return "Sucess";
     }
 
 

@@ -65,3 +65,4 @@ eb:
   config:
     rabbitQueue:
       aaaa: test1
+      bbbb: test1_bbbb
