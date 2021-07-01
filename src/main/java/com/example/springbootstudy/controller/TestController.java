@@ -300,6 +300,19 @@ public class TestController {
     }
 
 
+
+    @Value("${eb.config.rabbitQueue.retry}")
+    public String retryQueueName;
+
+    @RequestMapping("retryQueueNameTest")
+    public String retryQueueName() {
+        String message = "测试 " + System.currentTimeMillis();
+        rabbitTemplate.convertAndSend(retryQueueName, message);
+        System.out.println("发送消息为：" + message);
+        return "Sucess";
+    }
+
+
 }
 
 

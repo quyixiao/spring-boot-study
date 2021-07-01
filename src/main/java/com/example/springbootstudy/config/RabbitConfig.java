@@ -3,10 +3,14 @@ package com.example.springbootstudy.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.retry.MessageRecoverer;
+import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,34 +32,69 @@ public class RabbitConfig {
     }
 
 
-
     @Bean
     public Queue rabbitTestQueuebbbb(@Value("${eb.config.rabbitQueue.bbbb}") String queueName) {
+        return new Queue(queueName);
+
+    }
+
+    @Bean
+    public Queue rabbitTestRestryQueue(@Value("${eb.config.rabbitQueue.retry}") String queueName) {
         return new Queue(queueName);
     }
 
 
-    @Bean(name = "simpleRabbitListenerContainerFactory")
-    public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory() {
+    @Bean(name = "rongshuEnterPieceSimpleRabbitListenerContainerFactory")
+    public SimpleRabbitListenerContainerFactory rongshuEnterPieceSimpleRabbitListenerContainerFactory() {
         SimpleRabbitListenerContainerFactory listenerContainerFactory = new SimpleRabbitListenerContainerFactory();
         listenerContainerFactory.setConnectionFactory(connectionFactory);
         listenerContainerFactory.setConcurrentConsumers(5);
-        listenerContainerFactory.setMaxConcurrentConsumers(5);
+        listenerContainerFactory.setMaxConcurrentConsumers(10);
         listenerContainerFactory.setPrefetchCount(5);//预处理消息个数
         listenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);//开启消息确认机制
         return listenerContainerFactory;
     }
 
 
-
     @Bean(name = "simpleRabbitListenerContainerFactorybbbb")
     public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactorybbbb() {
         SimpleRabbitListenerContainerFactory listenerContainerFactory = new SimpleRabbitListenerContainerFactory();
         listenerContainerFactory.setConnectionFactory(connectionFactory);
-        listenerContainerFactory.setConcurrentConsumers(10);
+        listenerContainerFactory.setConcurrentConsumers(5);
         listenerContainerFactory.setMaxConcurrentConsumers(10);
-        listenerContainerFactory.setPrefetchCount(10);//预处理消息个数
+        listenerContainerFactory.setPrefetchCount(5);//预处理消息个数
         listenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);//开启消息确认机制
+        return listenerContainerFactory;
+    }
+
+
+    @Bean(name = "simpleRetryRabbitListenerContainerFactory")
+    public SimpleRabbitListenerContainerFactory simpleRetryRabbitListenerContainerFactory() {
+        SimpleRabbitListenerContainerFactory listenerContainerFactory = new SimpleRabbitListenerContainerFactory();
+        listenerContainerFactory.setConnectionFactory(connectionFactory);
+        listenerContainerFactory.setConcurrentConsumers(1);
+        listenerContainerFactory.setMaxConcurrentConsumers(1);
+        listenerContainerFactory.setPrefetchCount(1);//预处理消息个数
+        listenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.AUTO);//开启消息确认机制
+
+        RabbitProperties.ListenerRetry retryConfig = new RabbitProperties.ListenerRetry();
+        retryConfig.setEnabled(true);
+        retryConfig.setMaxAttempts(3);
+        retryConfig.setInitialInterval(3000);
+        retryConfig.setMaxInterval(5000);
+
+
+        if (retryConfig.isEnabled()) {
+            RetryInterceptorBuilder<?> builder = (retryConfig.isStateless()
+                    ? RetryInterceptorBuilder.stateless()
+                    : RetryInterceptorBuilder.stateful());
+            builder.maxAttempts(retryConfig.getMaxAttempts());
+            builder.backOffOptions(retryConfig.getInitialInterval(),
+                    retryConfig.getMultiplier(), retryConfig.getMaxInterval());
+            MessageRecoverer recoverer = (new RejectAndDontRequeueRecoverer());
+            builder.recoverer(recoverer);
+            listenerContainerFactory.setAdviceChain(builder.build());
+        }
         return listenerContainerFactory;
     }
 

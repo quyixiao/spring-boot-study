@@ -19,7 +19,7 @@ public class RabbitBussListener {
 
 
     @RabbitHandler
-    @RabbitListener(queues = "#{rabbitTestQueue.name}",containerFactory = "simpleRabbitListenerContainerFactory")
+    @RabbitListener(queues = "#{rabbitTestQueue.name}",containerFactory = "rongshuEnterPieceSimpleRabbitListenerContainerFactory")
     public void consumeMessage(@Payload String message, @Header(AmqpHeaders.DELIVERY_TAG) long delivertTag, Channel channel) {
         try {
             System.out.println("-------接收到消息：" + message);

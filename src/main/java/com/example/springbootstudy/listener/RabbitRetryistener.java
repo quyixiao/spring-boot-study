@@ -14,28 +14,40 @@ import java.util.Date;
 
 @Component
 @Slf4j
-public class RabbitBussListenerbbbb {
+public class RabbitRetryistener {
 
 
     @RabbitHandler
-    @RabbitListener(queues = "#{rabbitTestQueuebbbb.name}")
+    @RabbitListener(queues = "#{rabbitTestRestryQueue.name}",containerFactory = "simpleRetryRabbitListenerContainerFactory")
     public void consumeMessage(@Payload String message, @Header(AmqpHeaders.DELIVERY_TAG) long delivertTag, Channel channel) {
+        System.out.println("-------接收到消息：" + message);
         try {
-            System.out.println("-------接收到消息：" + message);
             Thread.sleep(3000);
-
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String bs[] = message.split(" ");
-            System.out.println("消费掉消息：" +   message  +       "  发送时间："+df.format(new Date(Long.parseLong(bs[bs.length-1]))) + "     消费完成时间："+ df.format(new Date()));
-        } catch (Exception e) {
-            log.error("处理异常", e);
-        } finally {
-            try {
-                    channel.basicAck(delivertTag,true);
-            } catch (Exception e) {
-                log.error("确实消息失败",e);
-            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        int i = 0 ;
+        int j = 0;
+        int c = i /j;
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String bs[] = message.split(" ");
+        System.out.println("消费掉消息：" +   message  +       "  发送时间："+df.format(new Date(Long.parseLong(bs[bs.length-1]))) + "     消费完成时间："+ df.format(new Date()));
+
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
