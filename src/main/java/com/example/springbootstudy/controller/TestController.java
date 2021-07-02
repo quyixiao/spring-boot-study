@@ -313,6 +313,17 @@ public class TestController {
     }
 
 
+    @Value("${eb.config.rabbitQueue.complexRetry}")
+    public String complexRetry;
+
+    @RequestMapping("complexRetryTest")
+    public String complexRetry() {
+        String message = "测试 " + System.currentTimeMillis();
+        rabbitTemplate.convertAndSend(complexRetry, message);
+        System.out.println("发送消息为：" + message);
+        return "Sucess";
+    }
+
 }
 
 

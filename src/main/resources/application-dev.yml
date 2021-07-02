@@ -67,3 +67,4 @@ eb:
       aaaa: test1
       bbbb: test1_bbbb
       retry: retry_queue_name
+      complexRetry: complex_retry_queue_name
