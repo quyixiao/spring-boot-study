@@ -8,7 +8,6 @@ import com.example.springbootstudy.service.impl.Auto;
 import com.example.springbootstudy.service.impl.Intelligent;
 import com.example.springbootstudy.utils.SpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.aop.scope.ScopedObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
 
 @RestController
 @Slf4j
@@ -320,6 +316,58 @@ public class TestController {
     public String complexRetry() {
         String message = "测试 " + System.currentTimeMillis();
         rabbitTemplate.convertAndSend(complexRetry, message);
+        System.out.println("发送消息为：" + message);
+        return "Sucess";
+    }
+
+
+
+    @Value("${eb.config.rabbitQueue.channelTxQueueName}")
+    public String channelTxQueueName;
+
+    @RequestMapping("channelTxQueueNameTest")
+    public String channelTxQueueNameTest() {
+        String message = "测试 " + System.currentTimeMillis();
+        rabbitTemplate.convertAndSend(channelTxQueueName, message);
+        System.out.println("发送消息为：" + message);
+        return "Sucess";
+    }
+
+
+
+    @Value("${eb.config.rabbitQueue.transactionManagerQueueName}")
+    public String transactionManagerQueueName;
+
+    @RequestMapping("transactionManagerQueueNameTest")
+    public String transactionManagerQueueNameTest() {
+        String message = "测试 " + System.currentTimeMillis();
+        rabbitTemplate.convertAndSend(transactionManagerQueueName, message);
+        System.out.println("发送消息为：" + message);
+        return "Sucess";
+    }
+
+
+
+    @Value("${eb.config.rabbitQueue.messageConvertQueueName}")
+    public String messageConvertQueueName;
+
+    @RequestMapping("messageConvertQueueNameTest")
+    public String messageConvertQueueNameTest() {
+        TestUser testUser = new TestUser();
+        testUser.setRealName("张三");
+        rabbitTemplate.convertAndSend(messageConvertQueueName, testUser);
+        System.out.println("发送消息为：" + JSON.toJSONString(testUser));
+        return "Sucess";
+    }
+
+
+    @Value("${eb.config.rabbitQueue.customArgumentName}")
+    public String customArgumentName;
+
+    @RequestMapping("customArgumentNameTest")
+    public String customArgumentNameTest() {
+        String message = "测试xxx " + System.currentTimeMillis();
+        rabbitTemplate.convertAndSend(customArgumentName, message);
         System.out.println("发送消息为：" + message);
         return "Sucess";
     }

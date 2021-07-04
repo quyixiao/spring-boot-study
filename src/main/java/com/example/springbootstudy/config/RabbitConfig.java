@@ -1,6 +1,7 @@
 package com.example.springbootstudy.config;
 
 import com.example.springbootstudy.listener.MyRetryOperationsInterceptor;
+import com.example.springbootstudy.listener.MySimpleRabbitListenerContainerFactory;
 import com.example.springbootstudy.listener.MySimpleRetryPolicy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AcknowledgeMode;
@@ -9,8 +10,11 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.retry.MessageRecoverer;
 import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
+import org.springframework.amqp.rabbit.transaction.RabbitTransactionManager;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
@@ -61,17 +65,49 @@ public class RabbitConfig {
     }
 
 
+    @Bean
+    public Queue channelTxQueueName(@Value("${eb.config.rabbitQueue.channelTxQueueName}") String queueName) {
+        return new Queue(queueName);
+    }
+
+
+
+    @Bean
+    public Queue transactionManagerQueueName(@Value("${eb.config.rabbitQueue.transactionManagerQueueName}") String queueName) {
+        return new Queue(queueName);
+    }
+
+
+
+    @Bean
+    public Queue customArgumentName(@Value("${eb.config.rabbitQueue.customArgumentName}") String queueName) {
+        return new Queue(queueName);
+    }
+
+
+
     @Bean(name = "rongshuEnterPieceSimpleRabbitListenerContainerFactory")
     public SimpleRabbitListenerContainerFactory rongshuEnterPieceSimpleRabbitListenerContainerFactory() {
         SimpleRabbitListenerContainerFactory listenerContainerFactory = new SimpleRabbitListenerContainerFactory();
         listenerContainerFactory.setConnectionFactory(connectionFactory);
-        listenerContainerFactory.setConcurrentConsumers(5);
+        listenerContainerFactory.setConcurrentConsumers(1);
+        listenerContainerFactory.setMaxConcurrentConsumers(10);
+        listenerContainerFactory.setPrefetchCount(5);//预处理消息个数
+        listenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);//开启消息确认机制
+
+        return listenerContainerFactory;
+    }
+
+    @Bean(name = "mySimpleRabbitListenerContainerFactory")
+    public MySimpleRabbitListenerContainerFactory mySimpleRabbitListenerContainerFactory() {
+        MySimpleRabbitListenerContainerFactory listenerContainerFactory = new MySimpleRabbitListenerContainerFactory();
+        listenerContainerFactory.setConnectionFactory(connectionFactory);
+        listenerContainerFactory.setConcurrentConsumers(1);
         listenerContainerFactory.setMaxConcurrentConsumers(10);
         listenerContainerFactory.setPrefetchCount(5);//预处理消息个数
         listenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);//开启消息确认机制
         return listenerContainerFactory;
     }
-
 
     @Bean(name = "simpleRabbitListenerContainerFactorybbbb")
     public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactorybbbb() {
@@ -209,4 +245,52 @@ public class RabbitConfig {
     }
 
 
+
+
+    @Bean(name = "txSimpleRabbitListenerContainerFactory")
+    public SimpleRabbitListenerContainerFactory txSimpleRabbitListenerContainerFactory() {
+        SimpleRabbitListenerContainerFactory listenerContainerFactory = new SimpleRabbitListenerContainerFactory();
+        listenerContainerFactory.setConnectionFactory(connectionFactory);
+        listenerContainerFactory.setConcurrentConsumers(1);
+        listenerContainerFactory.setMaxConcurrentConsumers(10);
+        listenerContainerFactory.setPrefetchCount(5);//预处理消息个数
+        listenerContainerFactory.setChannelTransacted(true);//设置有channel事务
+        return listenerContainerFactory;
+    }
+
+/*    @Bean
+    public  RabbitTransactionManager rabbitTransactionManager(ConnectionFactory connectionFactory){
+        return new  RabbitTransactionManager(connectionFactory);
+    }*/
+
+    @Bean(name = "rabbitManagerSimpleRabbitListenerContainerFactory")
+    public SimpleRabbitListenerContainerFactory rabbitManagerSimpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory listenerContainerFactory = new SimpleRabbitListenerContainerFactory();
+        listenerContainerFactory.setConnectionFactory(connectionFactory);
+        listenerContainerFactory.setConcurrentConsumers(1);
+        listenerContainerFactory.setMaxConcurrentConsumers(10);
+        listenerContainerFactory.setPrefetchCount(5);//预处理消息个数
+        //listenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.NONE);
+      //  listenerContainerFactory.setTransactionManager(rabbitTransactionManager(connectionFactory));
+        return listenerContainerFactory;
+    }
+
+
+
+    @Bean
+    public Queue messageConvertQueueName(@Value("${eb.config.rabbitQueue.messageConvertQueueName}") String queueName) {
+        return new Queue(queueName);
+    }
+
+
+    @Bean(name = "messageConvertSimpleRabbitListenerContainerFactory")
+    public SimpleRabbitListenerContainerFactory messageConvertSimpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory listenerContainerFactory = new SimpleRabbitListenerContainerFactory();
+        listenerContainerFactory.setConnectionFactory(connectionFactory);
+        listenerContainerFactory.setConcurrentConsumers(1);
+        listenerContainerFactory.setMaxConcurrentConsumers(10);
+        listenerContainerFactory.setPrefetchCount(5);//预处理消息个数
+        listenerContainerFactory.setMessageConverter(new Jackson2JsonMessageConverter());
+        return listenerContainerFactory;
+    }
 }

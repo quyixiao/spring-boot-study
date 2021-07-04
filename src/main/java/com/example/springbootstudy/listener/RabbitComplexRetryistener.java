@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Component
+//@Component
 @Slf4j
 public class RabbitComplexRetryistener {
 
 
-    @RabbitHandler
-    @RabbitListener(queues = "#{rabbitTestComplexRestryQueue.name}",containerFactory = "newComplexRetryRabbitListenerContainerFactory")
+  //  @RabbitHandler
+//    @RabbitListener(queues = "#{rabbitTestComplexRestryQueue.name}",containerFactory = "newComplexRetryRabbitListenerContainerFactory")
     public void consumeMessage(@Payload String message, @Header(AmqpHeaders.DELIVERY_TAG) long delivertTag, Channel channel) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("---complex----接收到消息：" + message + "，接收时间 ： " + df.format(new Date()));

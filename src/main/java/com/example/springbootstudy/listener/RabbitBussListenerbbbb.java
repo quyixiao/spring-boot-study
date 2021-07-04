@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Component
+//@Component
 @Slf4j
 public class RabbitBussListenerbbbb {
 
 
-    @RabbitHandler
-    @RabbitListener(queues = "#{rabbitTestQueuebbbb.name}")
+    //@RabbitHandler
+  //  @RabbitListener(queues = "#{rabbitTestQueuebbbb.name}")
     public void consumeMessage(@Payload String message, @Header(AmqpHeaders.DELIVERY_TAG) long delivertTag, Channel channel) {
         try {
             System.out.println("-------接收到消息：" + message);
-            Thread.sleep(3000);
+           // Thread.sleep(3000);
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String bs[] = message.split(" ");

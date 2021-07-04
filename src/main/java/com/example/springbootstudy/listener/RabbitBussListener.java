@@ -19,11 +19,12 @@ public class RabbitBussListener {
 
 
     @RabbitHandler
-    @RabbitListener(queues = "#{rabbitTestQueue.name}",containerFactory = "rongshuEnterPieceSimpleRabbitListenerContainerFactory")
+    //@RabbitListener(queues = "#{rabbitTestQueue.name}",containerFactory = "rongshuEnterPieceSimpleRabbitListenerContainerFactory")
+    @RabbitListener(queues = "#{rabbitTestQueue.name}",containerFactory = "mySimpleRabbitListenerContainerFactory")
     public void consumeMessage(@Payload String message, @Header(AmqpHeaders.DELIVERY_TAG) long delivertTag, Channel channel) {
         try {
             System.out.println("-------接收到消息：" + message);
-            Thread.sleep(3000);
+            //Thread.sleep(3000);
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String bs[] = message.split(" ");

@@ -12,37 +12,20 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//@Component
+@Component
 @Slf4j
-public class RabbitSimpleRetryistener {
+public class RabbitChannelTxListener {
 
 
-  //  @RabbitHandler
-    //@RabbitListener(queues = "#{rabbitTestRestryQueue.name}",containerFactory = "simpleRetryRabbitListenerContainerFactory")
+    @RabbitHandler
+    @RabbitListener(queues = "#{channelTxQueueName.name}",containerFactory = "txSimpleRabbitListenerContainerFactory")
     public void consumeMessage(@Payload String message, @Header(AmqpHeaders.DELIVERY_TAG) long delivertTag, Channel channel) {
+        System.out.println("-------接收到消息：" + message);
+        //int i = 0 ;
+        //int j  = i / 0 ;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println("------接收到消息：" + message + "，接收时间 ： " + df.format(new Date()));
-        int i = 0 ;
-        int j = 0;
-        int c = i /j;
-
         String bs[] = message.split(" ");
         System.out.println("消费掉消息：" +   message  +       "  发送时间："+df.format(new Date(Long.parseLong(bs[bs.length-1]))) + "     消费完成时间："+ df.format(new Date()));
-
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
