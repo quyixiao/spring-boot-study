@@ -198,10 +198,8 @@ public class TestController {
     }
 
 /*
-
     @Autowired
     private ScopedProxyModeA scopedProxyModeA;
-
 
     @Autowired
     private IScopedProxyModeA iScopedProxyModeA;
@@ -346,8 +344,6 @@ public class TestController {
         return "Sucess";
     }
 
-
-
     @Value("${eb.config.rabbitQueue.messageConvertQueueName}")
     public String messageConvertQueueName;
 
@@ -360,7 +356,6 @@ public class TestController {
         return "Sucess";
     }
 
-
     @Value("${eb.config.rabbitQueue.customArgumentName}")
     public String customArgumentName;
 
@@ -372,6 +367,16 @@ public class TestController {
         return "Sucess";
     }
 
+    @Value("${eb.config.rabbitQueue.autoCreateQueue}")
+    public String autoCreateQueue;
+
+    @RequestMapping("autoCreateQueueTest")
+    public String autoCreateQueueTest() {
+        String message = "测试xxx " + System.currentTimeMillis();
+        rabbitTemplate.convertAndSend(autoCreateQueue, message);
+        System.out.println("发送消息为：" + message);
+        return "Sucess";
+    }
 }
 
 

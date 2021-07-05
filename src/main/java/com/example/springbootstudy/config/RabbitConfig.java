@@ -1,5 +1,6 @@
 package com.example.springbootstudy.config;
 
+import com.example.springbootstudy.configure.MyRabbitAdmin;
 import com.example.springbootstudy.listener.MyRetryOperationsInterceptor;
 import com.example.springbootstudy.listener.MySimpleRabbitListenerContainerFactory;
 import com.example.springbootstudy.listener.MySimpleRetryPolicy;
@@ -13,14 +14,13 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.retry.MessageRecoverer;
 import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
-import org.springframework.amqp.rabbit.transaction.RabbitTransactionManager;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.retry.RetryOperations;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.interceptor.MethodInvocationRecoverer;
@@ -58,7 +58,6 @@ public class RabbitConfig {
     }
 
 
-
     @Bean
     public Queue rabbitTestComplexRestryQueue(@Value("${eb.config.rabbitQueue.complexRetry}") String queueName) {
         return new Queue(queueName);
@@ -71,19 +70,16 @@ public class RabbitConfig {
     }
 
 
-
     @Bean
     public Queue transactionManagerQueueName(@Value("${eb.config.rabbitQueue.transactionManagerQueueName}") String queueName) {
         return new Queue(queueName);
     }
 
 
-
     @Bean
     public Queue customArgumentName(@Value("${eb.config.rabbitQueue.customArgumentName}") String queueName) {
         return new Queue(queueName);
     }
-
 
 
     @Bean(name = "rongshuEnterPieceSimpleRabbitListenerContainerFactory")
@@ -185,8 +181,7 @@ public class RabbitConfig {
                     Message message = (Message) args[1];
                     if (messageRecoverer == null) {
                         log.info("messageRecoverer == null");
-                    }
-                    else {
+                    } else {
                         messageRecoverer.recover(message, cause);
                     }
                     return null;
@@ -196,9 +191,6 @@ public class RabbitConfig {
         }
         return listenerContainerFactory;
     }
-
-
-
 
 
     @Bean(name = "newComplexRetryRabbitListenerContainerFactory")
@@ -232,8 +224,7 @@ public class RabbitConfig {
                     Message message = (Message) args[1];
                     if (messageRecoverer == null) {
                         log.info("messageRecoverer == null");
-                    }
-                    else {
+                    } else {
                         messageRecoverer.recover(message, cause);
                     }
                     return null;
@@ -243,8 +234,6 @@ public class RabbitConfig {
         }
         return listenerContainerFactory;
     }
-
-
 
 
     @Bean(name = "txSimpleRabbitListenerContainerFactory")
@@ -271,10 +260,9 @@ public class RabbitConfig {
         listenerContainerFactory.setMaxConcurrentConsumers(10);
         listenerContainerFactory.setPrefetchCount(5);//预处理消息个数
         //listenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.NONE);
-      //  listenerContainerFactory.setTransactionManager(rabbitTransactionManager(connectionFactory));
+        //  listenerContainerFactory.setTransactionManager(rabbitTransactionManager(connectionFactory));
         return listenerContainerFactory;
     }
-
 
 
     @Bean
@@ -293,4 +281,16 @@ public class RabbitConfig {
         listenerContainerFactory.setMessageConverter(new Jackson2JsonMessageConverter());
         return listenerContainerFactory;
     }
+
+
+    @Bean
+    public MyRabbitAdmin myRabbitAdmin(ConnectionFactory connectionFactory, ApplicationContext applicationContext) {
+        return new MyRabbitAdmin(connectionFactory,applicationContext);
+    }
+
+/*
+    @Bean
+    public Queue autoCreateQueue(@Value("${eb.config.rabbitQueue.autoCreateQueue}") String queueName) {
+        return new Queue(queueName);
+    }*/
 }

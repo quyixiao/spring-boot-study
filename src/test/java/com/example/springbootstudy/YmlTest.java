@@ -36,7 +36,7 @@ public class YmlTest {
 
     }
 
-    private static class Processor extends YamlProcessor {
+    public static class Processor extends YamlProcessor {
 
         Processor(Resource resource, String profile) {
             if (profile == null) {

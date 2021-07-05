@@ -72,3 +72,4 @@ eb:
       transactionManagerQueueName: transactionManagerQueueName
       messageConvertQueueName: messageConvertQueueName
       customArgumentName: customArgumentName
+      autoCreateQueue: autoCreateQueue_name_xxxxx_xxyy_ZZ_ffff
